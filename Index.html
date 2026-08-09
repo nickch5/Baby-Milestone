@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby Milestone Book</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Milestones">
+<link rel="apple-touch-icon" id="appleTouchIcon" href="">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F3F3;
+    --card:#FFFFFF;
+    --ink:#3A332C;
+    --ink-soft:#7A7167;
+    --sage:#8A9A7E;
+    --sage-deep:#5C6B52;
+    --clay:#E3A472;
+    --rose:#D98C93;
+    --gold:#B98B2E;
+    --line: rgba(58,51,44,0.16);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(58,51,44,0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding: 0 0 80px;
+  }
+
+  .wrap{
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 20px 0;
+  }
+
+  /* ---------- Cover ---------- */
+  .cover{
+    text-align:center;
+    padding: 20px 10px 56px;
+    border-bottom: 1px dashed var(--line);
+    margin-bottom: 40px;
+  }
+  .eyebrow{
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    color: var(--sage-deep);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(32px, 6vw, 48px);
+    margin: 0 0 18px;
+    line-height: 1.25;
+    font-style: italic;
+  }
+  .cover-photo{
+    width: 148px;
+    height: 148px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    overflow:hidden;
+    position:relative;
+    transition: border-color .2s ease;
+  }
+  .cover-photo:hover{ border-color: var(--clay); }
+  .cover-photo img{ width:100%; height:100%; object-fit:cover; display:none; }
+  .cover-photo .hint{
+    font-size:12px;
+    color:var(--ink-soft);
+    text-align:center;
+    padding: 0 18px;
+    line-height:1.5;
+  }
+  .cover-fields{
+    display:flex;
+    gap: 28px;
+    justify-content:center;
+    flex-wrap:wrap;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+  .cover-fields .field{ text-align:left; }
+  .cover-fields label{
+    display:block;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color: var(--sage-deep);
+    margin-bottom:4px;
+  }
+  [contenteditable]{
+    outline: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s ease;
+  }
+  [contenteditable]:hover, [contenteditable]:focus{
+    border-bottom-color: var(--clay);
+  }
+  [contenteditable]:empty:before{
+    content: attr(data-placeholder);
+    color: var(--ink-soft);
+    opacity: .65;
+  }
+  .cover-fields .value{
+    font-family:'Fraunces', serif;
+    font-size: 17px;
+    color: var(--ink);
+    min-width: 120px;
+  }
+  input[type=date]{
+    font-family:'Fraunces', serif;
+    font-size: 17px;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    outline: none;
+    padding: 0;
+    transition: border-color .2s ease;
+  }
+  input[type=date]:hover, input[type=date]:focus{ border-bottom-color: var(--clay); }
+
+  /* ---------- Timeline ---------- */
+  .timeline{
+    position: relative;
+    padding-left: 34px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    left: 11px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: repeating-linear-gradient(
+      to bottom, var(--sage) 0 6px, transparent 6px 12px
+    );
+  }
+
+  .milestone{
+    position: relative;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px 20px 18px 22px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 0 rgba(58,51,44,0.04);
+    border: 1px solid var(--line);
+  }
+  .milestone::before{
+    /* stamp node on the ribbon */
+    content:"";
+    position:absolute;
+    left: -34px;
+    top: 22px;
+    width: 24px;
+    height: 24px;
+    background: var(--paper);
+    border: 2px solid var(--sage);
+    border-radius: 50%;
+  }
+  .m-head{
+    display:flex;
+    align-items:flex-start;
+    gap: 14px;
+  }
+  .m-icon{
+    flex: 0 0 auto;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--sage-deep);
+  }
+  .m-icon svg{ width:22px; height:22px; }
+  .m-title{
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .m-title .name{
+    font-family:'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 0 2px;
+  }
+  .m-title .avg{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .m-photo{
+    flex: 0 0 auto;
+    width: 54px; height: 54px;
+    border-radius: 10px;
+    border: 1.5px dashed var(--line);
+    background: var(--paper);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    overflow:hidden;
+    color: var(--ink-soft);
+  }
+  .m-photo img{ width:100%; height:100%; object-fit:cover; display:none; }
+  .m-photo svg{ width:18px; height:18px; }
+
+  .m-delete{
+    flex: 0 0 auto;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size: 15px;
+    line-height: 1;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .m-delete:hover{ background: var(--rose); color:#fff; border-color: var(--rose); }
+
+  .m-body{
+    margin-top: 14px;
+    display:flex;
+    gap: 22px;
+    flex-wrap:wrap;
+    align-items:flex-end;
+  }
+  .m-field{ min-width: 130px; }
+  .m-field label{
+    display:block;
+    font-size: 11px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color: var(--rose);
+    margin-bottom: 4px;
+  }
+  .m-field .val{
+    font-size: 15px;
+  }
+  .m-age .val{
+    color: var(--sage-deep);
+    font-weight: 500;
+  }
+
+  /* ---------- Add milestone ---------- */
+  .add-row{
+    display:flex;
+    justify-content:center;
+    margin-top: 8px;
+  }
+  .add-btn{
+    font-family:'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--sage-deep);
+    background: transparent;
+    border: 1.5px dashed var(--sage);
+    border-radius: 999px;
+    padding: 9px 20px;
+    cursor:pointer;
+    transition: background .2s ease, color .2s ease;
+  }
+  .add-btn:hover{ background: var(--sage); color:#fff; }
+
+  input[type=file]{ display:none; }
+
+  @media (max-width: 560px){
+    .m-photo{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="cover">
+    <div class="eyebrow">Baby Milestone Book</div>
+    <h1>Milestones of <span id="babyNameSpan" contenteditable="true" data-placeholder="baby's name">our little one</span></h1>
+
+    <label class="cover-photo" id="coverPhotoLabel">
+      <img id="coverPhotoImg" alt="Baby photo">
+      <span class="hint" id="coverPhotoHint">Tap to add<br>baby's photo</span>
+      <input type="file" accept="image/*" id="coverPhotoInput">
+    </label>
+
+    <div class="cover-fields">
+      <div class="field">
+        <label>Nickname</label>
+        <div class="value" id="nicknameDiv" contenteditable="true" data-placeholder="Type nickname">Baby...</div>
+      </div>
+      <div class="field">
+        <label>Date of birth</label>
+        <input type="date" id="dob">
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+
+  <div class="add-row">
+    <button class="add-btn" id="addMilestoneBtn">+ Add a milestone</button>
+  </div>
+</div>
+
+<script>
+// ---- icon set (simple line icons) ----
+const icons = {
+  smile: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8.5" cy="9" r="1"/><circle cx="15.5" cy="9" r="1"/><path d="M7 14c1.2 2 3 3 5 3s3.8-1 5-3"/></svg>`,
+  laugh: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 8l2 2M6 10l2-2"/><path d="M16 8l2 2M16 10l2-2"/><path d="M6.5 13.5c1.5 3 3.4 4.5 5.5 4.5s4-1.5 5.5-4.5"/></svg>`,
+  roll: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 12a7 7 0 1 1 2 4.9"/><path d="M5 17v-4h4"/></svg>`,
+  sit: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="6.5" r="2.2"/><path d="M8 20v-4c0-2 1.8-3.5 4-3.5s4 1.5 4 3.5v4"/></svg>`,
+  tooth: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4c-2.2 0-3.5 1.8-3.3 4.4.2 2.6 1 6.5 1.9 8.7.5 1.3 1.9 1.2 2.2-.1.4-1.6.9-3 1.2-3s.8 1.4 1.2 3c.3 1.3 1.7 1.4 2.2.1.9-2.2 1.7-6.1 1.9-8.7C15.5 5.8 14.2 4 12 4c-1 0-1.4.6-2 .6S9 4 8 4Z"/></svg>`,
+  crawl: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="6" cy="7" r="1.3"/><circle cx="13" cy="9" r="1.3"/><circle cx="8" cy="15" r="1.3"/><circle cx="16" cy="16" r="1.3"/></svg>`,
+  stand: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="5.5" r="2"/><path d="M12 8v7"/><path d="M12 15l-3 5M12 15l3 5"/><path d="M9 11h6"/></svg>`,
+  walk: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><ellipse cx="9" cy="8" rx="2" ry="2.6"/><ellipse cx="15" cy="16" rx="2" ry="2.6"/></svg>`,
+  word: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v9H9l-3 3v-3H4z"/><circle cx="9" cy="10.5" r=".6" fill="currentColor" stroke="none"/><circle cx="12" cy="10.5" r=".6" fill="currentColor" stroke="none"/><circle cx="15" cy="10.5" r=".6" fill="currentColor" stroke="none"/></svg>`,
+  cake: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><path d="M11 3.6c0 .8.6 1 .6 1.7s-.6.9-.6 1.7"/><path d="M5 20v-6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6"/><path d="M4 20h16"/><path d="M5 14c1-1 2-1 3 0s2 1 3 0 2-1 3 0 2 1 3 0"/></svg>`,
+  camera: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.2"/></svg>`
+};
+
+const timeline = document.getElementById('timeline');
+const dobInput = document.getElementById('dob');
+const babyNameSpan = document.getElementById('babyNameSpan');
+const nicknameDiv = document.getElementById('nicknameDiv');
+
+// ---- persistence (localStorage) ----
+const STORAGE_KEY = 'babyMilestoneBook';
+
+function collectData(){
+  const milestones = Array.from(document.querySelectorAll('.milestone')).map(el => {
+    const img = el.querySelector('.m-photo img');
+    return {
+      icon: el.dataset.icon || 'camera',
+      name: el.querySelector('.name').textContent,
+      avg: el.querySelector('.avg').textContent,
+      date: el.querySelector('.m-date-input').value,
+      photo: (img && img.style.display === 'block') ? img.src : ''
+    };
+  });
+  return {
+    babyName: babyNameSpan.textContent,
+    nickname: nicknameDiv.textContent,
+    dob: dobInput.value,
+    coverPhoto: (coverImgReady() ? coverImg.src : ''),
+    milestones
+  };
+}
+
+function coverImgReady(){
+  return coverImg && coverImg.style.display === 'block';
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+  }catch(err){
+    console.warn('Could not save (storage may be blocked in this embed):', err);
+  }
+}
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch(err){
+    console.warn('Could not load saved data:', err);
+    return null;
+  }
+}
+
+function debounce(fn, wait){
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+const debouncedSave = debounce(saveData, 400);
+
+// ---- age calculation ----
+function calcAge(dobStr, eventStr){
+  if(!dobStr || !eventStr) return '';
+  const dob = new Date(dobStr);
+  const ev = new Date(eventStr);
+  if(isNaN(dob) || isNaN(ev)) return '';
+  if(ev < dob) return 'before birth';
+
+  let years = ev.getFullYear() - dob.getFullYear();
+  let months = ev.getMonth() - dob.getMonth();
+  let days = ev.getDate() - dob.getDate();
+
+  if(days < 0){
+    months--;
+    const prevMonthDays = new Date(ev.getFullYear(), ev.getMonth(), 0).getDate();
+    days += prevMonthDays;
+  }
+  if(months < 0){
+    years--;
+    months += 12;
+  }
+
+  const parts = [];
+  if(years > 0) parts.push(years + (years === 1 ? ' year' : ' years'));
+  if(months > 0) parts.push(months + (months === 1 ? ' month' : ' months'));
+  if(days > 0 || parts.length === 0) parts.push(days + (days === 1 ? ' day' : ' days'));
+  return parts.join(' ');
+}
+
+function refreshAllAges(){
+  document.querySelectorAll('.milestone').forEach(updateAge);
+}
+
+function updateAge(el){
+  const dateInput = el.querySelector('.m-date-input');
+  const ageVal = el.querySelector('.m-age .val');
+  const age = calcAge(dobInput.value, dateInput.value);
+  ageVal.textContent = age || '—';
+}
+
+dobInput.addEventListener('change', () => { refreshAllAges(); saveData(); });
+babyNameSpan.addEventListener('input', debouncedSave);
+nicknameDiv.addEventListener('input', debouncedSave);
+
+function makeMilestone(item){
+  const el = document.createElement('div');
+  el.className = 'milestone';
+  el.dataset.icon = item.icon;
+  el.innerHTML = `
+    <div class="m-head">
+      <div class="m-icon">${icons[item.icon] || icons.camera}</div>
+      <div class="m-title">
+        <p class="name" contenteditable="true">${item.name}</p>
+        <p class="avg">${item.avg || ''}</p>
+      </div>
+      <label class="m-photo">
+        <img alt="">
+        ${icons.camera}
+        <input type="file" accept="image/*">
+      </label>
+      <button class="m-delete" type="button" title="Delete this milestone">✕</button>
+    </div>
+    <div class="m-body">
+      <div class="m-field">
+        <label>Date</label>
+        <input type="date" class="m-date-input">
+      </div>
+      <div class="m-field m-age">
+        <label>Age at the time</label>
+        <div class="val">—</div>
+      </div>
+    </div>
+  `;
+
+  if(item.date) el.querySelector('.m-date-input').value = item.date;
+  if(item.photo){
+    const img = el.querySelector('.m-photo img');
+    img.src = item.photo;
+    img.style.display = 'block';
+    el.querySelector('.m-photo').querySelectorAll('svg').forEach(s => s.style.display = 'none');
+  }
+
+  const photoInput = el.querySelector('.m-photo input');
+  const photoImg = el.querySelector('.m-photo img');
+  const photoIconWrap = el.querySelector('.m-photo');
+  photoInput.addEventListener('change', () => {
+    const file = photoInput.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      photoImg.src = e.target.result;
+      photoImg.style.display = 'block';
+      photoIconWrap.querySelectorAll('svg').forEach(s => s.style.display = 'none');
+      saveData();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  el.querySelector('.name').addEventListener('input', debouncedSave);
+  el.querySelector('.m-date-input').addEventListener('change', () => { updateAge(el); saveData(); });
+  el.querySelector('.m-delete').addEventListener('click', () => { el.remove(); saveData(); });
+
+  return el;
+}
+
+const defaultData = [
+  {icon:'smile', name:'First smile', avg:'Average age ~6–8 weeks'},
+  {icon:'laugh', name:'First laugh', avg:'Average age ~3–4 months'},
+  {icon:'roll', name:'First roll over', avg:'Average age ~4–6 months'},
+  {icon:'sit', name:'Sits up alone', avg:'Average age ~6 months'},
+  {icon:'tooth', name:'First tooth', avg:'Average age ~6–10 months'},
+  {icon:'crawl', name:'First crawl', avg:'Average age ~7–10 months'},
+  {icon:'stand', name:'Stands holding on', avg:'Average age ~9–12 months'},
+  {icon:'walk', name:'First steps', avg:'Average age ~11–14 months'},
+  {icon:'word', name:'First word', avg:'Average age ~12 months'},
+  {icon:'cake', name:'First birthday', avg:'A big milestone all its own'}
+];
+
+document.getElementById('addMilestoneBtn').addEventListener('click', () => {
+  const el = makeMilestone({icon:'camera', name:'New milestone', avg:''});
+  timeline.appendChild(el);
+  el.querySelector('.name').focus();
+  // let the parent add a photo right away for the new milestone
+  el.querySelector('.m-photo').click();
+  saveData();
+});
+
+// cover photo upload
+const coverInput = document.getElementById('coverPhotoInput');
+const coverImg = document.getElementById('coverPhotoImg');
+const coverHint = document.getElementById('coverPhotoHint');
+const appleTouchIcon = document.getElementById('appleTouchIcon');
+
+// crops the uploaded photo to a square and writes it to the
+// apple-touch-icon link tag, so "Add to Home Screen" uses this photo
+function setHomeScreenIcon(imgDataUrl){
+  const img = new Image();
+  img.onload = () => {
+    const size = 180; // recommended apple-touch-icon size
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    const side = Math.min(img.width, img.height);
+    const sx = (img.width - side) / 2;
+    const sy = (img.height - side) / 2;
+    ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+    appleTouchIcon.href = canvas.toDataURL('image/png');
+  };
+  img.src = imgDataUrl;
+}
+
+coverInput.addEventListener('change', () => {
+  const file = coverInput.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    coverImg.src = e.target.result;
+    coverImg.style.display = 'block';
+    coverHint.style.display = 'none';
+    setHomeScreenIcon(e.target.result);
+    saveData();
+  };
+  reader.readAsDataURL(file);
+});
+
+// ---- initial render: restore saved data if present, otherwise defaults ----
+(function init(){
+  const saved = loadData();
+  if(saved){
+    babyNameSpan.textContent = saved.babyName || 'our little one';
+    nicknameDiv.textContent = saved.nickname || 'Baby...';
+    if(saved.dob) dobInput.value = saved.dob;
+    if(saved.coverPhoto){
+      coverImg.src = saved.coverPhoto;
+      coverImg.style.display = 'block';
+      coverHint.style.display = 'none';
+      setHomeScreenIcon(saved.coverPhoto);
+    }
+    const list = (saved.milestones && saved.milestones.length) ? saved.milestones : defaultData;
+    list.forEach(item => timeline.appendChild(makeMilestone(item)));
+  } else {
+    defaultData.forEach(item => timeline.appendChild(makeMilestone(item)));
+  }
+  refreshAllAges();
+})();
+</script>
+
+</body>
+</html>
